@@ -7,5 +7,11 @@ in pkgs.mkShell {
   buildInputs = with pkgs; [
     latest.rustChannels.stable.rust
     niv
+    gtk3
+    glib
+    glib-networking
+    libsoup
+    webkitgtk
+    pkg-config
   ];
 }

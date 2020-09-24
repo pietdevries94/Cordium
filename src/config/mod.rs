@@ -2,7 +2,7 @@ use serde::Deserialize;
 use std::env;
 use std::path::Path;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Config {
     pub sites: Vec<Site>,
 }
@@ -13,7 +13,7 @@ impl Default for Config {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Site {
     pub name: String,
     pub url: String,

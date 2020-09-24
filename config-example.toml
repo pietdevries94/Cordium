@@ -1,3 +1,11 @@
 [[sites]]
 name="nixos"
 url="https://nixos.org"
+
+[[sites]]
+name="rust"
+url="https://www.rust-lang.org/"
+
+[[sites]]
+name="gtk"
+url="https://www.gtk.org"
