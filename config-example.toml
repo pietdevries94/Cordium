@@ -1,6 +1,6 @@
 [[sites]]
-name="nixos"
-url="https://nixos.org"
+name="pastebin"
+url="https://pastebin.com/"
 
 [[sites]]
 name="rust"

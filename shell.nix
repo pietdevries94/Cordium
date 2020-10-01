@@ -13,5 +13,6 @@ in pkgs.mkShell {
     libsoup
     webkitgtk
     pkg-config
+    gnome3.glade
   ];
 }
