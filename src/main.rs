@@ -7,7 +7,9 @@ use gtk::prelude::*;
 use gio::prelude::*;
 use glib::clone;
 use gtk::{Application, Builder, ApplicationWindow, Button, Box};
-use webkit2gtk::{ WebView, WebViewExt };
+use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage };
+use std::env;
+use std::path::Path;
 
 mod config;
 
@@ -21,13 +23,23 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
     let button_box: Box = builder.get_object("button_box").expect("Couldn't get button_box");
     let webview_box: Box = builder.get_object("webview_box").expect("Couldn't get webview_box");
 
+    let home_folder = env::var("HOME").unwrap();
+    let cache_path = Path::new(&home_folder).
+        join(".cache/cordium/cookies");
+
     for site in c.sites {
         let name = site.name;
         let url = site.url;
 
         let wv: WebView = WebView::new();
-        wv.load_uri(&url);
         wv.set_vexpand(true);
+
+        // Set the cookies
+        let ctx = wv.get_context().expect("Couldn't get webview context");
+        let cm = ctx.get_cookie_manager().expect("Couldn't get cookie manager");
+        cm.set_persistent_storage(cache_path.to_str().unwrap(), CookiePersistentStorage::Text);
+
+        wv.load_uri(&url);
 
         let b = Button::with_label(&name);
         b.connect_clicked(clone!(@weak wv, @strong webview_box => move |_| {
@@ -46,7 +58,6 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
 }
 
 fn main() {
-
     let application = Application::new(
         Some("com.github.pietdevries94.cordium"),
         Default::default(),
