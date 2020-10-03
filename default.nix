@@ -1,6 +1,6 @@
 { 
   pkgs ? import ./nix/pkgs.nix {},
-  cargoSha256 ? "0bvamamxcjvlj4ric5lwfdiaypjr6k8bpz562alrmpki2lx0dfn8"
+  cargoSha256 ? "1wdn5a0nw6grrr66x7irij7xhrsc3vp6xz6mkkb42j3xksy4l7y2"
 }:
 
 let
