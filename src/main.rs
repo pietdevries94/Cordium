@@ -47,7 +47,12 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
         wv.load_uri(&url);
 
         let b = Button::with_label(&name);
-        b.connect_clicked(clone!(@weak wv, @strong webview_box => move |_| {
+        b.connect_clicked(clone!(@weak wv, @strong webview_box, @strong url => move |_| {
+            // Go back to original url by clicking on active tab
+            if wv.get_visible() == true {
+                wv.load_uri(&url);
+                return;
+            };
             for other_wv in  webview_box.get_children().iter() {
                 other_wv.set_visible(false);
             }
