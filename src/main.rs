@@ -7,7 +7,7 @@ use gtk::prelude::*;
 use gio::prelude::*;
 use glib::clone;
 use gtk::{Application, Builder, ApplicationWindow, Button, Box};
-use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage, SecurityOrigin, LoadEvent };
+use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage, SecurityOrigin, LoadEvent, NotificationExt };
 use std::env;
 use std::path::Path;
 
@@ -51,6 +51,25 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
         let allowed = &[&SecurityOrigin::new_for_uri(url.as_str())]; 
         let disallowed = &[];
         ctx.initialize_notification_permissions(allowed, disallowed);
+        // Edit notifications to show where they are comming from
+        
+        let mut base_title = name.to_string();
+        base_title.push_str("\n");
+        let base_app = window.get_application().expect("Somehow there is no application");
+        wv.connect_show_notification(move |_, original| {
+            let mut title = base_title.to_string();
+            title.push_str(&original.get_title().expect("").to_string());
+            let n = gio::Notification::new(&title);
+
+            match original.get_body() {
+                Some(gs) => n.set_body(Some(& gs.to_string())),
+                None => {},
+            };
+
+            base_app.send_notification(None, &n);
+            
+            true
+        });
 
         // Set darkmode
         if site.dark_mode.unwrap_or(default_dark_mode) {
@@ -67,7 +86,6 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
         if default_dark_mode || site.dark_mode.unwrap_or(false) {
             wv.set_background_color(&gdk::RGBA::black());
         }
-
         wv.load_uri(&url);
 
         let b = Button::with_label(&name);
