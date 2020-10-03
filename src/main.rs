@@ -7,7 +7,7 @@ use gtk::prelude::*;
 use gio::prelude::*;
 use glib::clone;
 use gtk::{Application, Builder, ApplicationWindow, Button, Box};
-use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage, SecurityOrigin };
+use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage, SecurityOrigin, LoadEvent };
 use std::env;
 use std::path::Path;
 
@@ -27,11 +27,19 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
     let cache_path = Path::new(&home_folder).
         join(".cache/cordium/cookies");
 
+    let default_dark_mode = c.dark_mode.unwrap_or(false);
+    let dark_mode_script = "
+        (async () => {
+            await import('https://unpkg.com/darkreader/darkreader.js');
+            DarkReader.enable();
+        })();
+    ";
+
     for site in c.sites {
         let name = site.name;
         let url = site.url;
 
-        let wv: WebView = WebView::new();
+        let wv = WebView::new();
         wv.set_vexpand(true);
 
         // Set the cookies
@@ -43,6 +51,22 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
         let allowed = &[&SecurityOrigin::new_for_uri(url.as_str())]; 
         let disallowed = &[];
         ctx.initialize_notification_permissions(allowed, disallowed);
+
+        // Set darkmode
+        if site.dark_mode.unwrap_or(default_dark_mode) {
+            wv.connect_load_changed(move |s, e| {
+                if e != LoadEvent::Committed {
+                    return;
+                }
+
+                let cancellable = gio::Cancellable::new();
+                s.run_javascript(dark_mode_script, Some(&cancellable), move |_| {});
+            });
+        }
+        // Always set background black when using global dark, even when dark mode of specific app is disabled to prevent white flashes
+        if default_dark_mode || site.dark_mode.unwrap_or(false) {
+            wv.set_background_color(&gdk::RGBA::black());
+        }
 
         wv.load_uri(&url);
 

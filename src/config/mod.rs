@@ -4,12 +4,16 @@ use std::path::Path;
 
 #[derive(Deserialize, Clone)]
 pub struct Config {
+    pub dark_mode: Option<bool>,
     pub sites: Vec<Site>,
 }
 
 impl Default for Config {
     fn default() -> Self {
-        Config { sites: vec![] }
+        Config {
+            dark_mode: Some(false),
+            sites: vec![]
+        }
     }
 }
 
@@ -17,6 +21,7 @@ impl Default for Config {
 pub struct Site {
     pub name: String,
     pub url: String,
+    pub dark_mode: Option<bool>,
 }
 
 fn get_config_path() -> String {

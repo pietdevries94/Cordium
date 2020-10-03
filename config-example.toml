@@ -1,14 +1,19 @@
-[[sites]]
-name="pastebin"
-url="https://pastebin.com/"
+dark_mode=true
 
 [[sites]]
 name="rust"
 url="https://www.rust-lang.org/"
+dark_mode=false
+
+[[sites]]
+name="about:blank"
+url="about:blank"
+dark_mode=false
 
 [[sites]]
 name="gtk"
 url="https://www.gtk.org"
+dark_mode=true
 
 [[sites]]
 name="notification test"

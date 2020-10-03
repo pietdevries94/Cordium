@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 toml = "0.5"
 glib = "0.10.2"
+gdk = "0.13.2"
 
 [dependencies.serde]
 version = "1.0"
