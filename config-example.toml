@@ -11,5 +11,9 @@ name="gtk"
 url="https://www.gtk.org"
 
 [[sites]]
+name="notification test"
+url="https://www.bennish.net/web-notifications.html"
+
+[[sites]]
 name="epochconverter"
 url="https://www.epochconverter.com/"

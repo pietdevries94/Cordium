@@ -7,7 +7,7 @@ use gtk::prelude::*;
 use gio::prelude::*;
 use glib::clone;
 use gtk::{Application, Builder, ApplicationWindow, Button, Box};
-use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage };
+use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage, SecurityOrigin };
 use std::env;
 use std::path::Path;
 
@@ -38,6 +38,11 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
         let ctx = wv.get_context().expect("Couldn't get webview context");
         let cm = ctx.get_cookie_manager().expect("Couldn't get cookie manager");
         cm.set_persistent_storage(cache_path.to_str().unwrap(), CookiePersistentStorage::Text);
+
+        // Notifications
+        let allowed = &[&SecurityOrigin::new_for_uri(url.as_str())]; 
+        let disallowed = &[];
+        ctx.initialize_notification_permissions(allowed, disallowed);
 
         wv.load_uri(&url);
 
