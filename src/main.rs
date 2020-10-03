@@ -53,7 +53,7 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
                 wv.load_uri(&url);
                 return;
             };
-            for other_wv in  webview_box.get_children().iter() {
+            for other_wv in webview_box.get_children().iter() {
                 other_wv.set_visible(false);
             }
             wv.set_visible(true);
@@ -64,6 +64,7 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
     }
 
     button_box.show_all();
+    webview_box.get_children().first().expect("There are no webviews").set_visible(true);
     window.show();
 }
 
