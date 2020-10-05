@@ -7,7 +7,7 @@ use gtk::prelude::*;
 use gio::prelude::*;
 use glib::clone;
 use gtk::{Application, Builder, ApplicationWindow, Button, Box};
-use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage, SecurityOrigin, LoadEvent, NotificationExt };
+use webkit2gtk::{ WebView, WebViewExt, WebContextExt, CookieManagerExt, CookiePersistentStorage, SecurityOrigin, NotificationExt };
 use std::env;
 use std::path::Path;
 
@@ -74,10 +74,6 @@ fn build_ui(app: &gtk::Application, c: config::Config) {
         // Set darkmode
         if site.dark_mode.unwrap_or(default_dark_mode) {
             wv.connect_load_changed(move |s, e| {
-                if e != LoadEvent::Committed {
-                    return;
-                }
-
                 let cancellable = gio::Cancellable::new();
                 s.run_javascript(dark_mode_script, Some(&cancellable), move |_| {});
             });
