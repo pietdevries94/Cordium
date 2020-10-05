@@ -18,6 +18,7 @@ dark_mode=true
 [[sites]]
 name="notification test"
 url="https://www.bennish.net/web-notifications.html"
+icon_path="/tmp/external-content.duckduckgo.com.jpg"
 
 [[sites]]
 name="epochconverter"

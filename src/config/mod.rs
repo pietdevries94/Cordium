@@ -22,6 +22,7 @@ pub struct Site {
     pub name: String,
     pub url: String,
     pub dark_mode: Option<bool>,
+    pub icon_path: Option<String>
 }
 
 fn get_config_path() -> String {
